@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: futures-expiry-api
+    runtime: docker
+    plan: free
+    region: oregon
+    healthCheckPath: /health
+    autoDeploy: false
+    envVars:
+      - key: PAY_TO
+        value: "0xcB3aE5bF8b1B4b3FE9d987a9a733830095a2927B"
+      - key: X402_NETWORK
+        value: mainnet
+      - key: CDP_API_KEY_ID
+        fromService:
+          type: web
+          name: market-hours-api
+          envVarKey: CDP_API_KEY_ID
+      - key: CDP_API_KEY_SECRET
+        fromService:
+          type: web
+          name: market-hours-api
+          envVarKey: CDP_API_KEY_SECRET
