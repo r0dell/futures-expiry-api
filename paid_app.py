@@ -88,7 +88,7 @@ def pay(price: str) -> PaymentOption:
 
 routes = {
     "GET /v1/front-month": RouteConfig(
-        accepts=pay("$0.001"),
+        accepts=pay("$0.01"),
         description="Returns the current front-month contract of a CME or Eurex index future, the most "
                     "active contract after the roll date, days to expiration and the exact last trading time.",
         mime_type="application/json", service_name=SVC,
@@ -102,7 +102,7 @@ routes = {
         ),
     ),
     "GET /v1/expirations": RouteConfig(
-        accepts=pay("$0.001"),
+        accepts=pay("$0.01"),
         description="Returns the next quarterly contracts of a CME or Eurex index future with contract "
                     "symbol, last trading day, trading end time in UTC and local time, and roll date.",
         mime_type="application/json", service_name=SVC,
@@ -119,7 +119,7 @@ routes = {
         ),
     ),
     "GET /v1/roll-calendar": RouteConfig(
-        accepts=pay("$0.002"),
+        accepts=pay("$0.02"),
         description="Returns all four quarterly expirations and roll dates of a CME or Eurex index future "
                     "for one calendar year, with holiday adjustments.",
         mime_type="application/json", service_name=SVC,

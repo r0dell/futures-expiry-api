@@ -4,9 +4,9 @@ Verfallstermine, letzter Handelszeitpunkt und Rollover-Daten für Index-Futures 
 
 | Endpunkt | Liefert | Preis |
 |---|---|---|
-| `/v1/front-month?product=ES` | Front-Kontrakt, meistgehandelter Kontrakt nach Roll-Tag, Tage bis Verfall | 0.001 USDC |
-| `/v1/expirations?product=NQ&count=4` | nächste Kontrakte mit Symbol, letztem Handelstag, Handelsende, Roll-Tag | 0.001 USDC |
-| `/v1/roll-calendar?product=FDAX&year=2027` | alle vier Verfälle eines Jahres | 0.002 USDC |
+| `/v1/front-month?product=ES` | Front-Kontrakt, meistgehandelter Kontrakt nach Roll-Tag, Tage bis Verfall | 0.01 USDC |
+| `/v1/expirations?product=NQ&count=4` | nächste Kontrakte mit Symbol, letztem Handelstag, Handelsende, Roll-Tag | 0.01 USDC |
+| `/v1/roll-calendar?product=FDAX&year=2027` | alle vier Verfälle eines Jahres | 0.02 USDC |
 | `/v1/products`, `/docs`, `/health` | Produktliste, Doku | gratis |
 
 Produkte: ES, MES, NQ, MNQ, YM, MYM, RTY, M2K (CME) · FDAX, FDXM, FESX, FSMI (Eurex).
