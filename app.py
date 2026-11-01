@@ -8,6 +8,7 @@ from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Query
 
+import crypto
 import engine
 
 app = FastAPI(
@@ -15,7 +16,8 @@ app = FastAPI(
     version="0.1.0",
     description=(
         "Expiration dates, last trading times and roll dates for CME and Eurex equity index "
-        "futures (ES, NQ, YM, RTY and micros; FDAX, FDXM, FESX, FSMI). Computed from the "
+        "futures (ES, NQ, YM, RTY and micros; FDAX, FDXM, FESX, FSMI) and crypto futures (CME bitcoin, ether, "
+        "solana, XRP; Deribit daily/weekly/monthly/quarterly). Computed from the "
         "published exchange rules and holiday calendars. Every response names its source."
     ),
 )
@@ -52,6 +54,18 @@ def expirations(product: str = Query(..., examples=["NQ"]),
 def roll_calendar(product: str = Query(..., examples=["FESX"]),
                   year: int = Query(..., examples=[2027])):
     return _run(engine.roll_calendar, product, year)
+
+
+@app.get("/v1/crypto-expiry", summary="A37: CME crypto futures (BTC, ETH, SOL, XRP, micros) or Deribit expiries")
+def crypto_expiry(product: str = Query("BTC", examples=["BTC", "ETH", "MBT"]),
+                  venue: str = Query("cme", examples=["cme", "deribit"]),
+                  count: int = Query(6, ge=1, le=24), at: Optional[str] = None):
+    try:
+        return crypto.crypto_expiry(product, count, at, venue)
+    except KeyError as e:
+        raise HTTPException(status_code=404, detail=str(e).strip("'\""))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @app.get("/health", include_in_schema=False)

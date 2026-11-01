@@ -86,6 +86,7 @@ def pay(price: str) -> PaymentOption:
     return PaymentOption(scheme="exact", pay_to=PAY_TO, price=price, network=NETWORK)
 
 
+A37 = "$0.0305"  # Krypto-Futures-Verfall, neu 1.11.2026 (eindeutiger Preis für den Monitor)
 routes = {
     "GET /v1/front-month": RouteConfig(
         accepts=pay("$0.0205"),
@@ -132,6 +133,29 @@ routes = {
             output=OutputConfig(example={
                 "product": "FDAX", "year": 2027, "contracts": [
                     {"symbol": "FDAXH7", "last_trading_day": "2027-03-19", "roll_date": "2027-03-11"}]}),
+        ),
+    ),
+    "GET /v1/crypto-expiry": RouteConfig(
+        accepts=pay(A37),
+        description="Crypto futures expiries: CME Bitcoin, Micro Bitcoin, Ether, Micro Ether, Solana and XRP "
+                    "futures (last Friday of the month, 16:00 London, holiday-adjusted for UK and US) with contract "
+                    "codes and hours left, or Deribit daily/weekly/monthly/quarterly expiries (08:00 UTC) with "
+                    "instrument date codes. For crypto trading, hedging and roll agents.",
+        mime_type="application/json", service_name=SVC,
+        tags=["crypto", "bitcoin", "futures", "expiration", "deribit", "cme", "trading"],
+        extensions=declare_discovery_extension(
+            input={"product": "BTC", "venue": "cme", "count": "3"},
+            input_schema={"properties": {
+                "product": {"type": "string", "description": "CME: BTC, MBT, ETH, MET, SOL, XRP. Deribit: all, "
+                                                             "daily, weekly, monthly or quarterly"},
+                "venue": {"type": "string", "description": "cme (default) or deribit"},
+                "count": {"type": "string", "description": "Number of expiries, default 6"},
+                "at": AT_SCHEMA}, "required": []},
+            output=OutputConfig(example={
+                "exchange": "CME", "product": "BTC", "front": {
+                    "contract": "BTCZ6", "last_trading_day": "2026-12-24",
+                    "last_trade_utc": "2026-12-24T16:00:00+00:00",
+                    "holiday_adjustment": "2026-12-25 is a holiday (Christmas Day), moved to the previous business day"}}),
         ),
     ),
 }
